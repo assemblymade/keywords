@@ -2,6 +2,5 @@
   (:require [clojure.test :refer :all]
             [keywords.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest test-rake
+  (is (not= (rake "Just making sure everything runs.") nil)))
