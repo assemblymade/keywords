@@ -98,7 +98,9 @@
   "Returns the term-frequency score in
   document d of phrase p"
   [d p]
-  (reduce #(+ %1 (tf %2 d)) 0 p))
+  (reduce #(/ (+ %1 (tf %2 d))
+              (count p))
+          0 p))
 
 (defn rake
   "Returns a sorted list of keywords
