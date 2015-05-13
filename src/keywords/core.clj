@@ -15,12 +15,13 @@
     @stopwords))
 
 (defn tokenize [s]
-  (try
-    (string/trim
-     (string/split
-      s
-      word-regex))
-    (catch Exception e s)))
+  (let [lower-s (string/lower-case s)]
+    (try
+      (string/trim
+       (string/split
+        lower-s
+        word-regex))
+      (catch Exception e lower-s))))
 
 (defn- freqs
   "Returns a map of frequencies of
@@ -32,7 +33,7 @@
   "Calculates the raw frequency of
   term t in document d"
   [t d]
-  (or (get (freqs d) t)
+  (or (get (freqs d) (string/lower-case t))
       0))
 
 (defn max-f
@@ -97,7 +98,7 @@
   "Returns the term-frequency score in
   document d of phrase p"
   [d p]
-  (reduce #(+ %1 (/ (tf %2 d) (+ (tf %2 d) (count p)))) 0 p))
+  (reduce #(+ %1 (tf %2 d)) 0 p))
 
 (defn rake
   "Returns a sorted list of keywords
@@ -108,4 +109,4 @@
         sws (build-stopwords)
         kws (filter not-empty (map (partial phrases sws) sents))
         scores (reduce #(assoc %1 %2 (score d %2)) {} kws)]
-    (map #(vec [(first (% 0)) (% 1)]) (sort-by val > scores))))
+    (sort-by val > scores)))
